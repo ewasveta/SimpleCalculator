@@ -1,0 +1,54 @@
+*
+{
+    border-radius: 5%;
+}
+main
+{
+    width: 45%;
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: slategrey;  
+}
+main summary 
+{
+    width: 100%;
+    height: 4em;
+    padding: 0;
+}
+main summary h1
+{    
+    height: 78%;
+    line-height: 100%;
+    padding-top: 3%;
+    padding-right: 3%;
+    margin-top: 2.5%;
+    margin-bottom: 0;
+    color: rgb(90,90,90); 
+    background-color: rgb(237,237,237); 
+    text-align: right;
+    font-family: Arial;
+}
+main section
+{
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    gap: 0.5%;
+    background-color:rgb(235,235,235); ;
+    margin: 2%;    
+    height: 20em;
+}
+#total
+{
+    grid-area: 2 / 4 / 6 / 5;
+}
+main section button
+{
+    background-color: lightgrey;
+    font-size: 2em;    
+    font-weight: bolder;
+    color: rgb(90,90,90); 
+    border-radius: 10%;
+    border: 2px solid slategrey;
+}
