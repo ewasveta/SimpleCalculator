@@ -47,8 +47,7 @@ document.addEventListener('click', e =>
                 if(first!==-1)  first += 1;
             }         
             console.log(`first=${first}, last=${last}`);     
-            console.log(`res[first]=${res[first]}, res[last]=${res[last]}`);
-
+  
             if(first <= last)
             {
                 if(res.indexOf('*')===-1  &&  res.indexOf('/')===-1)
@@ -78,8 +77,6 @@ document.addEventListener('click', e =>
 
                         let sf = parseFloat(res.slice(one+1, last)); 
 
-                        console.log(`first factor=${ff}, second one=${sf}`);
-
                         let tmp = 0;
                         //sign:
                         tmp = res[one] === '*' ?  ff * sf :  ff / sf ;
@@ -105,23 +102,13 @@ document.addEventListener('click', e =>
         {
             let one = 0, end = 0;
 
-            if(res[res.length-1]==='*')
+            let signs = res.match(/[/*]/g);
+            if(signs!==null)
             {
-                one = res.indexOf('*'), end = res.lastIndexOf('*');
+                one = res.indexOf(signs[0]);
+                end = one;
 
-                if((res.indexOf('/')>0) && (end===one || end===one+1))
-                {
-                    one = res.indexOf('/'), end = res.indexOf('*');
-                }
-            }
-            if(res[res.length-1]==='/')
-            {
-                one = res.indexOf('/'), end = res.lastIndexOf('/');
-
-                if((res.indexOf('*')>0) && (end===one || end===one+1))
-                {
-                    one = res.indexOf('*'), end = res.indexOf('/');
-                }
+                if( signs.length > 1) end=res.lastIndexOf(signs[1]);
             }
             //Twice * or twice /  or /* or */:
             if(end===one+1)
@@ -131,21 +118,31 @@ document.addEventListener('click', e =>
             }
             if(one < end)
             {
-                let first = Math.max(0, res.indexOf('+'), res.indexOf('-'));
+                let sign = res.match(/[-+]/);
+                let first = sign===null  ?  -1  :  res.indexOf(sign);
+
+                //negative first number:
+                if(res[0]==='-')
+                {
+                    let str = res.slice(1);
+                    sign = str.match(/[-+]/);
+                    first = sign===null  ?  -1  :  str.indexOf(sign)+1;
+                } 
                 //first factor:
-                let ff = parseFloat(res.slice( first, one ));
+                let ff = parseFloat(res.slice( first+1, one ));
                 //second one:
                 let sf = parseFloat(res.slice( one+1, end ));
 
-                let tmp = (res[one]==='*')  ?  ff*sf  :  ff/sf;
+                let tmp = (res[one]==='*')  ?  ff*sf  :  ff/sf;              
+
+                //Round with an accuracy of 4 tenths:
+                tmp = Math.round(tmp * 10000) / 10000;
                 console.log(tmp);
   
                 clc = (first > 0)  ? 
-                    parseFloat(res.slice(0, first)) + tmp  :  tmp;
+                   res.slice(0, first+1).toString() + tmp  :  tmp;     //strings
 
-                //Round with an accuracy of 4 tenths:
-                clc = Math.round(clc * 10000) / 10000;
-                clc += res[res.length-1];   //'*';
+                clc += res[res.length-1];   //'*' or '/';
                 res = clc;
                 console.log(res);
             }
@@ -164,7 +161,7 @@ document.addEventListener('click', e =>
             //if adder:
             let a = res.indexOf('+');
             if(a===-1)  a=res.lastIndexOf('-');
-
+ 
             if(f===-1 && a===-1) return;    //Empty input
 
             let n1 = 0, n2=0;
@@ -177,15 +174,16 @@ document.addEventListener('click', e =>
             }
             if(a > 0)
             {
-                n1 = parseFloat(res.slice(0, a));
+                n1 = parseFloat(res.slice(0, a));      
                 if(f > 0)
                 {
-                    res = (res[a]==='+')  ?  n1 + clc  :  n1 - clc;
+                    res = n1 + clc;
+                    console.log(`res=${res}`);
                 }
                 else
                 {
                     n2 = parseFloat(res.slice(a+1));
-                    res = (res[a]==='+')  ?  n1 + n2  :  n1 - n2;
+                    res = n1 + n2;
                 }            
             }
             else res = clc;
